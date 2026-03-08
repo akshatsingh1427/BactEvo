@@ -1,0 +1,35 @@
+# Simulation Configuration
+
+simulation:
+  time_steps: 1000
+
+population:
+  initial_population: 100
+
+resources:
+  initial_resource: 1000
+  consumption_min: 1
+  consumption_max: 5
+
+growth:
+  growth_min: 5
+  growth_max: 15
+
+genotypes:
+  genotype_A_initial: 0.6
+  genotype_B_initial: 0.3
+  genotype_C_initial: 0.1
+
+mutation:
+  mutation_rate: 0.01
+  mutation_frequency_min: 0.01
+  mutation_frequency_max: 0.1
+
+interaction:
+  cooperation_min: 0.1
+  cooperation_max: 0.6
+  competition_min: 0.1
+  competition_max: 0.7
+
+output:
+  csv_file: simulation_metrics.csv
