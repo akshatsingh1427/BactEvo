@@ -16,6 +16,7 @@ import matplotlib.ticker as ticker
 import matplotlib.patches as mpatches
 import seaborn as sns
 import base64
+import os
 from io import BytesIO
 from datetime import datetime
 
@@ -54,13 +55,28 @@ def style(ax, fig):
     ax.set_axisbelow(True)
 
 
-def b64(fig):
+def b64(fig, name=None):
+    """
+    Converts figure to base64 for HTML AND optionally saves PNG.
+    """
+
+    if name:
+        os.makedirs("charts", exist_ok=True)
+        fig.savefig(
+            os.path.join("charts", f"{name}.png"),
+            dpi=140,
+            bbox_inches="tight",
+            facecolor=fig.get_facecolor()
+        )
+
     buf = BytesIO()
     fig.savefig(buf, format="png", dpi=140, bbox_inches="tight",
                 facecolor=fig.get_facecolor())
     buf.seek(0)
+
     enc = base64.b64encode(buf.read()).decode()
     plt.close(fig)
+
     return enc
 
 
@@ -88,7 +104,7 @@ def chart_population_line(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Total Population")
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(fmt_pop))
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "population_line")
 
 
 def chart_population_rolling(d, window=20):
@@ -103,7 +119,7 @@ def chart_population_rolling(d, window=20):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Total Population")
     legend(ax)
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "population_rolling")
 
 
 def chart_population_growth_rate(d):
@@ -117,7 +133,7 @@ def chart_population_growth_rate(d):
     ax.plot(d.time_step, gr, color=clr, lw=1.2)
     ax.set_xlabel("Time Step"); ax.set_ylabel("Growth Rate (%)")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "population_growth_rate")
 
 
 def chart_population_log(d):
@@ -129,7 +145,7 @@ def chart_population_log(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Population (log scale)")
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(fmt_pop))
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "population_log")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -144,7 +160,7 @@ def chart_resource_line(d):
     ax.plot(d.time_step, d.resource_concentration, color=clr, lw=1.8)
     ax.set_xlabel("Time Step"); ax.set_ylabel("Resource Conc. (mM)")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "resource_line")
 
 
 def chart_resource_vs_population(d):
@@ -158,7 +174,7 @@ def chart_resource_vs_population(d):
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(fmt_pop))
     ax.set_xlabel("Resource Conc. (mM)"); ax.set_ylabel("Total Population")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "resource_vs_population")
 
 
 def chart_resource_depletion_rate(d):
@@ -172,7 +188,7 @@ def chart_resource_depletion_rate(d):
     ax.plot(d.time_step, dr, color=clr, lw=1)
     ax.set_xlabel("Time Step"); ax.set_ylabel("Δ Resource / Step")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "resource_depletion_rate")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -188,7 +204,7 @@ def chart_genotypes_lines(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Density")
     legend(ax, loc="upper right")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "genotypes_lines")
 
 
 def chart_genotypes_stacked_area(d):
@@ -200,7 +216,7 @@ def chart_genotypes_stacked_area(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Cumulative Density")
     legend(ax, loc="upper left")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "genotypes_stacked_area")
 
 
 def chart_genotypes_proportion(d):
@@ -215,7 +231,7 @@ def chart_genotypes_proportion(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Proportion (%)")
     legend(ax, loc="upper left")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "genotypes_proportion")
 
 
 def chart_genotypes_scatter_matrix(d):
@@ -232,7 +248,7 @@ def chart_genotypes_scatter_matrix(d):
     for ax in g.axes.flat:
         style(ax, g.fig)
     g.fig.tight_layout(pad=1)
-    return b64(g.fig)
+    return b64(g.fig, "genotypes_scatter_matrix")
 
 
 def chart_genotypes_boxplot(d):
@@ -250,7 +266,7 @@ def chart_genotypes_boxplot(d):
     ax.set_xticklabels(GENOTYPE_LABELS, color=MUTED, fontsize=8)
     ax.set_ylabel("Density")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "genotypes_boxplot")
 
 
 def chart_genotype_dominance(d):
@@ -271,7 +287,7 @@ def chart_genotype_dominance(d):
     ax.set_yticks([])
     ax.set_ylabel("Dominant", color=MUTED, fontsize=8)
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "genotype_dominance")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -288,7 +304,7 @@ def chart_mutation_hist(d):
     for line in ax.lines: line.set_color(clr); line.set_lw(2)
     ax.set_xlabel("Mutation Frequency"); ax.set_ylabel("Count")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "mutation_histogram")
 
 
 def chart_mutation_over_time(d):
@@ -299,7 +315,7 @@ def chart_mutation_over_time(d):
     ax.plot(d.time_step, d.mutation_frequency, color=clr, lw=1.6)
     ax.set_xlabel("Time Step"); ax.set_ylabel("Mutation Frequency")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "mutation_over_time")
 
 
 def chart_mutation_violin(d):
@@ -314,7 +330,7 @@ def chart_mutation_violin(d):
     parts["cbars"].set_color(MUTED)
     ax.set_xticks([]); ax.set_ylabel("Mutation Frequency")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "mutation_violin")
 
 
 def chart_mutation_vs_population(d):
@@ -328,7 +344,7 @@ def chart_mutation_vs_population(d):
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(fmt_pop))
     ax.set_xlabel("Mutation Frequency"); ax.set_ylabel("Total Population")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "mutation_vs_population")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -345,7 +361,7 @@ def chart_coop_comp_lines(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Index")
     legend(ax, loc="best")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "coop_comp_lines")
 
 
 def chart_coop_comp_ratio(d):
@@ -361,7 +377,7 @@ def chart_coop_comp_ratio(d):
     ax.plot(d.time_step, ratio, color=clr, lw=1.6)
     ax.set_xlabel("Time Step"); ax.set_ylabel("Cooperation / Competition")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "coop_comp_ratio")
 
 
 def chart_coop_comp_scatter(d):
@@ -377,7 +393,7 @@ def chart_coop_comp_scatter(d):
     hi = max(d.competition_index.max(), d.cooperation_index.max())
     ax.plot([lo, hi], [lo, hi], color=MUTED, lw=1, linestyle=":")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "coop_comp_scatter")
 
 
 def chart_coop_comp_hist(d):
@@ -392,7 +408,7 @@ def chart_coop_comp_hist(d):
         for line in ax.lines: line.set_color(clr); line.set_lw(2)
         ax.set_xlabel(lbl); ax.set_ylabel("Count" if ax is axes[0] else "")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "coop_comp_hist")
 
 
 def chart_coop_vs_mutation(d):
@@ -405,7 +421,7 @@ def chart_coop_vs_mutation(d):
     cb.set_label("Time Step", color=MUTED, fontsize=8)
     ax.set_xlabel("Mutation Frequency"); ax.set_ylabel("Cooperation Index")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "coop_vs_mutation")
 
 
 def chart_comp_vs_mutation(d):
@@ -418,7 +434,7 @@ def chart_comp_vs_mutation(d):
     cb.set_label("Time Step", color=MUTED, fontsize=8)
     ax.set_xlabel("Mutation Frequency"); ax.set_ylabel("Competition Index")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "comp_vs_mutation")
 
 
 def chart_rolling_coop_comp(d, window=20):
@@ -435,7 +451,7 @@ def chart_rolling_coop_comp(d, window=20):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Index")
     legend(ax)
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "rolling_coop_comp")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -460,7 +476,7 @@ def chart_correlation_heatmap(d):
     cbar = ax.collections[0].colorbar
     cbar.ax.tick_params(colors=MUTED, labelsize=7)
     fig.tight_layout(pad=1.2)
-    return b64(fig)
+    return b64(fig, "correlation_heatmap")
 
 
 def chart_all_series_normalised(d):
@@ -481,7 +497,7 @@ def chart_all_series_normalised(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Normalised Value (0–1)")
     legend(ax, loc="upper right", ncol=2)
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "all_series_normalised")
 
 
 def chart_population_resource_dual_axis(d):
@@ -502,7 +518,7 @@ def chart_population_resource_dual_axis(d):
     ax1.legend(handles=[l1, l2], frameon=False, fontsize=7.5,
                labelcolor=TEXT_COLOR, loc="upper right")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "population_resource_dual_axis")
 
 
 def chart_coop_comp_population(d):
@@ -520,7 +536,7 @@ def chart_coop_comp_population(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Normalised Value")
     legend(ax, loc="best")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "coop_comp_population")
 
 
 def chart_genotype_resource_scatter(d):
@@ -534,7 +550,7 @@ def chart_genotype_resource_scatter(d):
     cb.set_label("Time Step", color=MUTED, fontsize=8)
     ax.set_xlabel("Resource Conc. (mM)"); ax.set_ylabel("Total Genotype Density")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "genotype_resource_scatter")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -555,7 +571,7 @@ def chart_environment_resource_regime(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Resource Conc. (mM)")
     legend(ax, loc="upper right")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "environment_resource_regime")
 
 
 def chart_antibiotic_stress_proxy(d):
@@ -574,7 +590,7 @@ def chart_antibiotic_stress_proxy(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Mutation Frequency")
     legend(ax, loc="upper right")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "antibiotic_stress_proxy")
 
 
 def chart_fitness_landscape_proxy(d):
@@ -591,7 +607,7 @@ def chart_fitness_landscape_proxy(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Fitness Proxy")
     legend(ax)
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "fitness_landscape_proxy")
 
 
 def chart_carrying_capacity_saturation(d):
@@ -609,7 +625,7 @@ def chart_carrying_capacity_saturation(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("% of Running Max (K-proxy)")
     legend(ax, loc="lower right")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "carrying_capacity_saturation")
 
 
 def chart_generation_time_proxy(d):
@@ -626,7 +642,7 @@ def chart_generation_time_proxy(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("log₂ Doublings / Step")
     legend(ax)
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "generation_time_proxy")
 
 
 def chart_adversarial_dynamics(d):
@@ -648,7 +664,7 @@ def chart_adversarial_dynamics(d):
     ax1.legend(handles=[l1, l2], frameon=False, fontsize=7.5,
                labelcolor=TEXT_COLOR, loc="upper right")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "adversarial_dynamics")
 
 
 def chart_cooperative_behaviors(d):
@@ -668,7 +684,7 @@ def chart_cooperative_behaviors(d):
     ax.set_xlabel("Time Step"); ax.set_ylabel("Normalised Value")
     legend(ax, loc="best")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "cooperative_behaviors")
 
 
 def chart_hgt_quorum_proxy(d):
@@ -687,7 +703,7 @@ def chart_hgt_quorum_proxy(d):
     ax.set_xlabel("Population Density (norm.)  ← Quorum proxy")
     ax.set_ylabel("Cooperation Index (norm.)   ← HGT proxy")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "hgt_quorum_proxy")
 
 
 def chart_spatial_genotype_heatmap(d):
@@ -705,7 +721,7 @@ def chart_spatial_genotype_heatmap(d):
     ax.set_yticklabels(["Gen A", "Gen B", "Gen C"], color=MUTED, fontsize=8)
     ax.set_xlabel("Time Step"); ax.set_ylabel("Genotype")
     fig.tight_layout(pad=1.4)
-    return b64(fig)
+    return b64(fig, "spatial_genotype_heatmap")
 
 
 def chart_evolutionary_driver_radar(d):
@@ -746,7 +762,7 @@ def chart_evolutionary_driver_radar(d):
         ax.plot(ang, val, "o", color=C["green"], ms=5)
 
     fig.tight_layout(pad=1.2)
-    return b64(fig)
+    return b64(fig, "evolutionary_driver_radar")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1181,3 +1197,11 @@ def generate_report(csv_path="simulation_metrics.csv", output_path="chart.html")
 
 if __name__ == "__main__":
     generate_report()
+
+def save_png(fig, name, folder="charts"):
+    os.makedirs(folder, exist_ok=True)
+    path = os.path.join(folder, f"{name}.png")
+    fig.savefig(path, dpi=140, bbox_inches="tight",
+                facecolor=fig.get_facecolor())
+    plt.close(fig)
+    return path
