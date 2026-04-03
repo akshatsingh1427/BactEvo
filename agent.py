@@ -1,20 +1,3 @@
-"""
-BactEvo — Bacterial Evolution Simulation Framework
-====================================================
-Pure Python (numpy + scipy + matplotlib).
-Produces a fully self-contained, interactive HTML report.
-
-Usage
------
-    python bacterial_sim.py                        # default parameters
-    python bacterial_sim.py --env antibiotic_spike # environment preset
-    python bacterial_sim.py --help                 # all CLI options
-
-The output report.html is a single file with:
-  • All charts embedded as base64 PNG
-  • Live JavaScript sliders that re-run a JS simulation engine in-browser
-  • Tab navigation across Population / Fitness / Mutation / Resources / Social / Spatial
-"""
 
 import argparse
 import base64
