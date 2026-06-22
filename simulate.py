@@ -1,7 +1,6 @@
 import csv
 import random
 
-# simulation parameters
 time_steps = 1000
 population = 100
 resource = 1000
