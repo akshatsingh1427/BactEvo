@@ -1,19 +1,36 @@
-# 🦠 BactEvo — Bacterial Evolution Simulation Framework
+<div align="center">
 
-> 🧬 Built for **HackBIO '26** | Kamand Bioengineering Group, IIT Mandi
-> 🔬 Track: Computational Systems Biology
+# 🦠 BactEvo
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=for-the-badge)
-![HackBIO](https://img.shields.io/badge/HackBIO-2026-purple?style=for-the-badge)
+### Bacterial Evolution Simulation Framework
 
----
+🧬 Built for **HackBIO '26** | Kamand Bioengineering Group, IIT Mandi
+🔬 Track: Computational Systems Biology
 
-## 📹 Demo Video
+<img src="https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white">
+<img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge">
+<img src="https://img.shields.io/badge/Status-Completed-brightgreen?style=for-the-badge">
+<img src="https://img.shields.io/badge/HackBIO-2026-purple?style=for-the-badge">
 
 [![BactEvo Demo](https://img.shields.io/badge/▶%20Watch%20Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=C4G_1XPR0ho)
 
+</div>
+
+---
+
+## Table of Contents
+
+- [Overview](#-overview)
+- [File Structure](#-file-structure)
+- [Quickstart](#-quickstart)
+- [Simulation Metrics](#-simulation-metrics-csv-schema)
+- [Biological Model](#-biological-model)
+- [Key Parameters](#️-key-parameters)
+- [Visualizations Produced](#-visualizations-produced)
+- [Biological Assumptions](#-biological-assumptions)
+- [Limitations and Future Work](#️-limitations-and-future-work)
+- [Team](#-team)
+- [Hackathon](#-hackathon)
 
 ---
 
@@ -25,14 +42,16 @@ BactEvo is an **agent-based + ODE hybrid** simulation framework that models the 
 
 ## 📁 File Structure
 
-    BactEvo/
-    ├── 🧫 agent.py                  # Core simulation engine (ODE + ABM hybrid)
-    ├── ⚙️  simulate.py               # Lightweight CSV generator
-    ├── 📊 visualize.py              # Chart generator — reads CSV, outputs HTML report
-    ├── 📄 simulation_metrics.csv    # Time-series output (1000 time steps, 9 metrics)
-    ├── 🌐 report.html               # Full interactive HTML report with embedded charts
-    ├── 📈 chart.html                # Standalone chart output
-    └── 📖 README.md
+```
+BactEvo/
+├── 🧫 agent.py                  # Core simulation engine (ODE + ABM hybrid)
+├── ⚙️  simulate.py               # Lightweight CSV generator
+├── 📊 visualize.py              # Chart generator — reads CSV, outputs HTML report
+├── 📄 simulation_metrics.csv    # Time-series output (1000 time steps, 9 metrics)
+├── 🌐 report.html               # Full interactive HTML report with embedded charts
+├── 📈 chart.html                # Standalone chart output
+└── 📖 README.md
+```
 
 ---
 
@@ -40,29 +59,37 @@ BactEvo is an **agent-based + ODE hybrid** simulation framework that models the 
 
 **1️⃣ Install dependencies**
 
-    pip install numpy scipy matplotlib seaborn pandas
+```bash
+pip install numpy scipy matplotlib seaborn pandas
+```
 
 **2️⃣ Run the full simulation**
 
-    python agent.py                          # default (resource-rich)
-    python agent.py --env antibiotic_spike   # sudden antibiotic dose
-    python agent.py --env antibiotic_gradual
-    python agent.py --env depleted
-    python agent.py --help
+```bash
+python agent.py                          # default (resource-rich)
+python agent.py --env antibiotic_spike   # sudden antibiotic dose
+python agent.py --env antibiotic_gradual
+python agent.py --env depleted
+python agent.py --help
+```
 
-> Output: report.html — open in any browser, no server needed.
+> Output: `report.html` — open in any browser, no server needed.
 
 **3️⃣ Run the lightweight CSV generator**
 
-    python simulate.py
+```bash
+python simulate.py
+```
 
-> Output: simulation_metrics.csv with 1000 rows.
+> Output: `simulation_metrics.csv` with 1000 rows.
 
 **4️⃣ Generate charts from CSV**
 
-    python visualize.py
+```bash
+python visualize.py
+```
 
-> Output: report.html with all charts embedded as base64 PNG.
+> Output: `report.html` with all charts embedded as base64 PNG.
 
 ---
 
@@ -70,15 +97,15 @@ BactEvo is an **agent-based + ODE hybrid** simulation framework that models the 
 
 | Column | Description |
 |---|---|
-| ⏱️ time_step | Current simulation epoch |
-| 🦠 total_population | Absolute count of living bacterial cells |
-| 🧪 resource_concentration | Available nutrient level in the environment (mM) |
-| 🔴 genotype_A_density | Relative frequency of Genotype A |
-| 🟡 genotype_B_density | Relative frequency of Genotype B |
-| 🟢 genotype_C_density | Relative frequency of Genotype C |
-| 🧬 mutation_frequency | Rate of novel trait appearance per time step |
-| 🤝 cooperation_index | Quantitative measure of friendly behavior (biofilm, public goods) |
-| ⚔️ competition_index | Quantitative measure of adversarial behavior (toxin/bacteriocin levels) |
+| ⏱️ `time_step` | Current simulation epoch |
+| 🦠 `total_population` | Absolute count of living bacterial cells |
+| 🧪 `resource_concentration` | Available nutrient level in the environment (mM) |
+| 🔴 `genotype_A_density` | Relative frequency of Genotype A |
+| 🟡 `genotype_B_density` | Relative frequency of Genotype B |
+| 🟢 `genotype_C_density` | Relative frequency of Genotype C |
+| 🧬 `mutation_frequency` | Rate of novel trait appearance per time step |
+| 🤝 `cooperation_index` | Quantitative measure of friendly behavior (biofilm, public goods) |
+| ⚔️ `competition_index` | Quantitative measure of adversarial behavior (toxin/bacteriocin levels) |
 
 ---
 
@@ -104,7 +131,9 @@ BactEvo is an **agent-based + ODE hybrid** simulation framework that models the 
 
 ### 📈 Population Phases Tracked
 
-    Lag → Log (Exponential) → Stationary → Death
+```
+Lag → Log (Exponential) → Stationary → Death
+```
 
 All visible in population vs. time curves.
 
@@ -114,13 +143,13 @@ All visible in population vs. time curves.
 
 | Parameter | Default | Description |
 |---|---|---|
-| env_type | rich | Environment preset |
-| mutation_rate | 0.001 | Probability of mutation per cell per step |
-| hgt_rate | 0.0005 | Horizontal gene transfer rate |
-| carrying_capacity | 1000.0 | Maximum sustainable population |
-| initial_resource | 100.0 | Starting nutrient concentration (mM) |
-| inflow | 2.0 | Resource replenishment rate (mM/t) |
-| init_A / B / C | 200/150/50 | Initial population of each genotype |
+| `env_type` | rich | Environment preset |
+| `mutation_rate` | 0.001 | Probability of mutation per cell per step |
+| `hgt_rate` | 0.0005 | Horizontal gene transfer rate |
+| `carrying_capacity` | 1000.0 | Maximum sustainable population |
+| `initial_resource` | 100.0 | Starting nutrient concentration (mM) |
+| `inflow` | 2.0 | Resource replenishment rate (mM/t) |
+| `init_A / B / C` | 200/150/50 | Initial population of each genotype |
 
 ---
 
@@ -134,7 +163,7 @@ All visible in population vs. time curves.
 - 🌀 **Phase Diagrams** — Population vs. resource phase-space trajectories
 - 🗺️ **Spatial Maps** — Colony formation and adversarial boundary visualization
 
-> All charts embedded in report.html — fully offline, no dependencies needed to view.
+> All charts embedded in `report.html` — fully offline, no dependencies needed to view.
 
 ---
 
@@ -146,7 +175,7 @@ All visible in population vs. time curves.
 4. Antibiotic stress introduces a fitness penalty applied differentially by genotype
 5. Cooperation (biofilm/public goods) modelled as a density-dependent threshold effect
 6. HGT allows resistance genes to transfer between genotypes at a low background rate
-7. Carrying capacity enforces logistic growth ceiling
+7. Carrying capacity enforces a logistic growth ceiling
 
 ---
 
@@ -161,7 +190,7 @@ All visible in population vs. time curves.
 
 ## 👥 Team
 
-See TEAM.txt for team member details.
+See `TEAM.txt` for team member details.
 
 ---
 
